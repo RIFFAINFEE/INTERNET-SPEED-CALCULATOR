@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internet Speed Calculator</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom, #4facfe, #00f2fe);
+            color: #333;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 20px 0;
+            color: #ffffff;
+            font-size: 2.5rem;
+        }
+
+        p, span {
+            font-size: 1.2rem;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 30px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #results-container {
+            background: white;
+            width: 80%;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .result {
+            margin: 10px 0;
+            font-size: 1.2rem;
+        }
+
+        .label {
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        #status {
+            margin-top: 20px;
+            font-size: 1.1rem;
+            color: #555;
+        }
+
+        footer {
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: #eee;
+        }
+    </style>
+    <script>
+        async function startSpeedTest() {
+            // Display loading message
+            document.getElementById('status').innerText = 'Running speed test... Please wait.';
+            
+            try {
+                // Fetch speed test results from the backend
+                const response = await fetch('/speedtest');
+                const data = await response.json();
+
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                // Update the results on the page
+                document.getElementById('download-speed').innerText = data.download_speed + ' Mbps';
+                document.getElementById('upload-speed').innerText = data.upload_speed + ' Mbps';
+                document.getElementById('ping').innerText = data.ping + ' ms';
+                document.getElementById('status').innerText = 'Speed test completed successfully!';
+            } catch (error) {
+                document.getElementById('status').innerText = 'Error: ' + error.message;
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Internet Speed Calculator</h1>
+
+    <button onclick="startSpeedTest()">Start Speed Test</button>
+
+    <div id="results-container">
+        <div class="result">
+            <span class="label">Download Speed:</span> 
+            <span id="download-speed">-</span>
+        </div>
+        <div class="result">
+            <span class="label">Upload Speed:</span> 
+            <span id="upload-speed">-</span>
+        </div>
+        <div class="result">
+            <span class="label">Ping:</span> 
+            <span id="ping">-</span>
+        </div>
+    </div>
+
+    <p id="status">Press "Start Speed Test" to measure your internet speed.</p>
+
+    <footer>
+        <p>Designed with ❤ for testing internet speed</p>
+    </footer>
+</body>
+</html>
